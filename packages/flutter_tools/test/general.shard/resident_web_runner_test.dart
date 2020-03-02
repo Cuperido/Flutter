@@ -119,6 +119,7 @@ void main() {
     when(mockDebugConnection.uri).thenReturn('ws://127.0.0.1/abcd/');
     when(mockFlutterDevice.devFS).thenReturn(mockWebDevFS);
     when(mockWebDevFS.sources).thenReturn(<Uri>[]);
+    when(mockWebDevFS.baseUri).thenReturn(Uri.parse('http://localhost:12345'));
     when(mockFlutterDevice.generator).thenReturn(mockResidentCompiler);
     when(mockChrome.chromeConnection).thenReturn(mockChromeConnection);
     when(mockChromeConnection.getTab(any)).thenAnswer((Invocation invocation) async {
@@ -149,6 +150,7 @@ void main() {
   }));
 
   test('runner with web server device supports debugging with --start-paused', () => testbed.run(() {
+    _setupMocks();
     when(mockFlutterDevice.device).thenReturn(WebServerDevice());
     final ResidentRunner profileResidentWebRunner = DwdsWebRunnerFactory().createWebRunner(
       mockFlutterDevice,
@@ -160,6 +162,7 @@ void main() {
       urlTunneller: null,
     );
 
+    expect(profileResidentWebRunner.uri, mockWebDevFS.baseUri);
     expect(profileResidentWebRunner.debuggingEnabled, true);
   }));
 
@@ -424,9 +427,8 @@ void main() {
     Usage: () => MockFlutterUsage(),
   }));
 
-  test('web resident runner iss debuggable', () => testbed.run(() {
+  test('web resident runner is debuggable', () => testbed.run(() {
     expect(residentWebRunner.debuggingEnabled, true);
-  }, overrides: <Type, Generator>{
   }));
 
   test('Exits when initial compile fails', () => testbed.run(() async {

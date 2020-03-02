@@ -79,6 +79,7 @@ const int _kObscureShowLatestCharCursorTicks = 3;
 /// final _controller = TextEditingController();
 ///
 /// void initState() {
+///   super.initState();
 ///   _controller.addListener(() {
 ///     final text = _controller.text.toLowerCase();
 ///     _controller.value = _controller.value.copyWith(
@@ -87,7 +88,6 @@ const int _kObscureShowLatestCharCursorTicks = 3;
 ///       composing: TextRange.empty,
 ///     );
 ///   });
-///   super.initState();
 /// }
 ///
 /// void dispose() {
@@ -564,7 +564,7 @@ class EditableText extends StatefulWidget {
   /// [TextStyle] instead. See [StrutStyle.inheritFromTextStyle].
   StrutStyle get strutStyle {
     if (_strutStyle == null) {
-      return style != null ? StrutStyle.fromTextStyle(style, forceStrutHeight: true) : StrutStyle.disabled;
+      return style != null ? StrutStyle.fromTextStyle(style, forceStrutHeight: true) : const StrutStyle();
     }
     return _strutStyle.inheritFromTextStyle(style);
   }
