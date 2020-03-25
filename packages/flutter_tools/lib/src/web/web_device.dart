@@ -138,7 +138,7 @@ class ChromeDevice extends Device {
     if (launchChrome) {
       _chrome = await globals.chromeLauncher.launch(
         url,
-        dataDir: globals.fs.currentDirectory
+        cacheDir: globals.fs.currentDirectory
             .childDirectory('.dart_tool')
             .childDirectory('chrome-device'),
         headless: debuggingOptions.webRunHeadless,
@@ -185,7 +185,7 @@ class WebDevices extends PollingDeviceDiscovery {
   bool get canListAnything => featureFlags.isWebEnabled;
 
   @override
-  Future<List<Device>> pollingGetDevices() async {
+  Future<List<Device>> pollingGetDevices({ Duration timeout }) async {
     return <Device>[
       if (_chromeIsAvailable)
         _webDevice,

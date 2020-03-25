@@ -8,7 +8,6 @@ import 'package:file/file.dart';
 import 'package:meta/meta.dart';
 
 import '../base/common.dart';
-import '../base/context.dart';
 import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
@@ -16,7 +15,6 @@ import '../base/process.dart';
 import '../base/version.dart';
 import '../cache.dart';
 import '../globals.dart' as globals;
-import '../ios/xcodeproj.dart';
 import '../project.dart';
 
 const String noCocoaPodsConsequence = '''
@@ -45,8 +43,6 @@ const String cocoaPodsUpgradeInstructions = '''
 
 const String podfileMigrationInstructions = '''
   rm ios/Podfile''';
-
-CocoaPods get cocoaPods => context.get<CocoaPods>();
 
 /// Result of evaluating the CocoaPods installation.
 enum CocoaPodsStatus {
@@ -225,7 +221,7 @@ class CocoaPods {
   /// contains a suitable `Podfile` and that its `Flutter/Xxx.xcconfig` files
   /// include pods configuration.
   Future<void> setupPodfile(XcodeBasedProject xcodeProject) async {
-    if (!xcodeProjectInterpreter.isInstalled) {
+    if (!globals.xcodeProjectInterpreter.isInstalled) {
       // Don't do anything for iOS when host platform doesn't support it.
       return;
     }
@@ -242,7 +238,7 @@ class CocoaPods {
     if (xcodeProject is MacOSProject) {
       podfileTemplateName = 'Podfile-macos';
     } else {
-      final bool isSwift = (await xcodeProjectInterpreter.getBuildSettings(
+      final bool isSwift = (await globals.xcodeProjectInterpreter.getBuildSettings(
         runnerProject.path,
         'Runner',
       )).containsKey('SWIFT_VERSION');
